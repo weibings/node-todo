@@ -7,7 +7,7 @@ const {ObjectID} = require('mongodb');
 
 let text = 'having dinner';
 
-let todos = [{_id: new ObjectID(), text: 'first thing to do'}, {_id: new ObjectID(), text: 'second thing to do'}];
+let todos = [{_id: new ObjectID(), text: 'first thing to do'}, {_id: new ObjectID(), text: 'second thing to do', completed: true, completedAt: 323}];
 
 beforeEach((done) => {
 	Todo.remove({}).then(()=> {
@@ -138,3 +138,39 @@ describe('DELETE /todos/:id', () => {
 		.end(done);
 	})
 })
+
+ describe('PATCH /todos/:id', () => {
+ 	it('should update the todo', (done) => {
+ 		let txt = todos[0].text;
+ 		request(app)
+ 		.patch(`/todos/${todos[0]._id}`)
+ 		.expect(200)
+ 		.send({text: "watch a game", completed: true})
+ 		.expect((res) => {
+ 			console.log(res.body);
+ 			expect(res.body.todo.text).toNotEqual(txt);
+ 			expect(res.body.todo.completed).toBe(true);
+ 			expect(res.body.todo.completedAt).toBeA('number');
+ 		})
+ 		.end(done);
+ 	});
+
+ 	it('should clear completedAt when todo is not completed', (done) => {
+ 		let txt = todos[0].text;
+ 		request(app)
+ 		.patch(`/todos/${todos[0]._id}`)
+ 		.expect(200)
+ 		.send({text: "wash dishes", completed: false})
+ 		.expect((res) => {
+ 			console.log(res.body);
+ 			expect(res.body.todo.text).toNotEqual(txt);
+ 			expect(res.body.todo.completed).toBe(false);
+ 			expect(res.body.todo.completedAt).toNotExist();
+ 		})
+ 		.end(done);
+ 	})
+ })
+
+
+
+
