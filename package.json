@@ -10,7 +10,7 @@
   "engines": {
     "node": "9.11.1"
   }
-  "author": "",
+  "author": "bin wei",
   "license": "ISC",
   "dependencies": {
     "babel": "^6.23.0",
