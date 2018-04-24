@@ -88,8 +88,6 @@ describe('GET /todos/:id', () => {
 
 	it('should return a 404 if todo not found', (done) => {
 		let id = new ObjectID();
-		console.log(id);
-		console.log(todos[1]._id);
 		request(app)
 		.get(`/todos/${id}`)
 		.expect(404)
@@ -99,6 +97,43 @@ describe('GET /todos/:id', () => {
 	it('should return a 404 for non-objectid', (done) => {
 		request(app)
 		.get(`/todos/123`)
+		.expect(404)
+		.end(done);
+	})
+})
+
+describe('DELETE /todos/:id', () => {
+	it('should remove a todo', (done) => {
+		request(app)
+		.delete(`/todos/${todos[0]._id}`)
+		.expect(200)
+		.expect((res) => {
+			expect(res.body._id).toEqual(todos[0]._id);
+		})
+		.end((err, res) => {
+			if (err) {
+				return done(err);
+			}
+			Todo.findById(todos[0]._id).then((todo) => {
+				expect(todo).toNotExist();
+				done();
+			}).catch((e) => {
+				done(e);
+			})
+		});
+	});
+
+	it('should return 404 if todo not found', (done) => {
+		let id = new ObjectID();
+		request(app)
+		.delete('/todos/id')
+		.expect(404)
+		.end(done);
+	});
+
+	it('shoud return 404 if ObjectID is invalid', (done) => {
+		request(app)
+		.delete('/todos/23ewdsf')
 		.expect(404)
 		.end(done);
 	})
