@@ -7,13 +7,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 
-
+const port = process.env.PORT || 3000;
 let app = express();
-
-// let newTodo = new Todo ({
-// 	text: 'coding',
-// 	completed: false
-// })
 
 app.use(bodyParser.json());
 
@@ -95,8 +90,8 @@ app.patch('/todos/:id', (req, res) => {
 	})
 });
 
-app.listen(3000, () => {
-	console.log('Start port 3000');
+app.listen(port, () => {
+	console.log(`Start port ${port}`);
 })
 
 
