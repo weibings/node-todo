@@ -1,3 +1,4 @@
+
 const {mongoose} = require('./db/mongoose.js');
 const {User} = require('./models/User.js');
 const {Todo} = require('./models/Todo.js');
@@ -21,8 +22,6 @@ app.post('/todos', (req, res) => {
 	}).catch((e) =>{
 		res.status(400).send(e);
 	});
-	
-
 })
 
 app.get('/todos', (req, res) => {
