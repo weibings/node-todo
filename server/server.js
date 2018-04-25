@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
+const authenticate = require('./middleware/authenticate.js');
 
 const port = process.env.PORT;
 let app = express();
@@ -93,7 +94,6 @@ app.patch('/todos/:id', (req, res) => {
 app.post('/users', (req, res) => {
 	let body = _.pick(req.body, ['email', 'password']);
 	let user = new User(body);
-	console.log(user);
 	user.save().then(() => {
 
 		return user.generateAuthToken();
@@ -102,6 +102,10 @@ app.post('/users', (req, res) => {
 	}).catch((e) => {
 		res.status(400).send(e);
 	})
+})
+
+app.get('/users/me', authenticate, (req, res) => {
+	res.send(req.user);
 })
 app.listen(port, () => {
 	console.log(`Start port ${port}`);
